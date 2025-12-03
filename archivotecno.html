@@ -1,0 +1,929 @@
+!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Archivotecno — Hábitos de Estudio y Tecnodependencia</title>
+
+<style>
+  :root{
+    --azul-acero: #90CAF9;
+    --azul-brillante: #42A5F5;
+    --azul-clasico: #2196F3;
+    --azul-intenso: #1976D2;
+    --azul-noche: #0D47A1;
+    --card-bg: #ffffff;
+    --muted: #f1f5f9;
+    --text-dark: #123049;
+    --shadow: rgba(10,40,80,0.06);
+  }
+  body{
+  margin:0;
+  font-family: "Poppins", Arial, sans-serif;
+  background: var(--azul-acero); /* ← Fondo de un solo color */
+  color: var(--text-dark);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+
+  /* Header */
+  header{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:18px 24px;
+    background: linear-gradient(90deg, var(--azul-brillante), var(--azul-clasico));
+    color: white;
+    position:sticky;
+    top:0;
+    z-index:999;
+    box-shadow:0 6px 18px rgba(13,71,161,0.12);
+    animation: appearUp .45s ease both;
+  }
+  header img{
+    width:72px;
+    height:72px;
+    object-fit:contain;
+    border-radius:12px;
+    background:transparent; /* logo sin fondo recomendado */
+    padding:6px;
+    box-shadow:0 6px 18px rgba(13,71,161,0.12);
+  }
+  header h1{ font-size:20px; margin:0; letter-spacing:0.2px; font-weight:700; }
+
+  /* Nav */
+  nav{
+    display:flex;
+    gap:8px;
+    padding:12px 18px;
+    justify-content:center;
+    flex-wrap:wrap;
+    border-bottom: 1px solid rgba(13,71,161,0.06);
+    background: rgba(255,255,255,0.02);
+    position:sticky;
+    top:96px;
+    z-index:990;
+  }
+  .nav-btn{
+    background: var(--azul-intenso);
+    color:white;
+    border: none;
+    padding:8px 12px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    font-size:14px;
+    transition: transform .18s ease, box-shadow .18s ease;
+    box-shadow:0 6px 14px rgba(25,118,210,0.12);
+  }
+  .nav-btn:hover{ transform: translateY(-3px) scale(1.02); box-shadow:0 12px 28px rgba(25,118,210,0.18); }
+
+  .wrap{ max-width:1100px; margin:20px auto 60px; padding:0 18px; display:flex; gap:20px; align-items:flex-start;}
+  .contenido{ flex:3; background:var(--card-bg); padding:20px; border-radius:14px; box-shadow:0 10px 30px var(--shadow); animation: appearUp .45s .06s ease both; }
+  aside{ flex:1; background: rgba(144,202,249,0.12); padding:18px; border-radius:12px; min-width:220px; height:max-content; box-shadow:0 8px 20px rgba(8,48,107,0.04); animation: appearUp .45s .08s ease both; }
+
+  section { margin-bottom:26px; }
+  h2{ color: var(--azul-noche); border-bottom:3px solid var(--azul-acero); padding-bottom:6px; margin-top:0; font-size:1.25rem; }
+  h3{ color:var(--azul-clasico); margin-bottom:8px; }
+  p{ line-height:1.6; color:#213a4d; margin:10px 0; }
+  ul { margin-left:18px; }
+  .card { background: #fff; padding:14px; border-radius:10px; box-shadow:0 6px 18px rgba(8,30,60,0.04); margin-bottom:12px; }
+
+  .link-box { background: linear-gradient(90deg,#eaf2ff,#fff); padding:12px; border-left:4px solid var(--azul-clasico); border-radius:8px; margin-top:12px; }
+
+  /* Images */
+  .hero-image{
+    width:100%;
+    border-radius:10px;
+    margin:12px 0;
+    box-shadow:0 8px 24px rgba(8,30,60,0.06);
+    object-fit:cover;
+    max-height:300px;
+    display:block;
+  }
+  .img-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px;
+    margin-top:12px;
+  }
+  .img-grid img{ width:100%; border-radius:8px; height:160px; object-fit:cover; box-shadow:0 6px 18px rgba(8,30,60,0.04); }
+
+  /* Foro */
+  .foro-category{
+    margin:18px 0;
+    padding:16px;
+    background:#ffffff;
+    border-radius:10px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.06);
+  }
+  .foro-question{
+    margin:12px 0;
+    padding:12px;
+    background:linear-gradient(180deg, rgba(144,202,249,0.12), rgba(66,165,245,0.06));
+    border-left:4px solid #1e88e5;
+    border-radius:8px;
+  }
+  .foro-actions{
+    margin-top:8px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .foro-respuestas{
+    margin-top:10px;
+    padding-left:10px;
+    display:none;
+  }
+  .foro-respuestas p{
+    background:rgba(144,202,249,0.1);
+    padding:10px;
+    border-radius:6px;
+    border-left:4px solid #42a5f5;
+    margin:6px 0;
+  }
+  .responder-box{
+    margin-top:10px;
+    display:none;
+  }
+  .responder-box textarea{
+    width:100%;
+    border-radius:8px;
+    border:1px solid rgba(33,150,243,0.18);
+    padding:8px;
+    resize:vertical;
+    min-height:60px;
+  }
+  .submit-btn{
+    background:#42a5f5;
+    color:white;
+    padding:8px 12px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .submit-btn:hover{ background:#1e88e5; transform: translateY(-2px); transition: .12s; }
+
+  /* Test */
+  .test-container { background: white; padding:18px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.04); }
+  label { display:block; margin:6px 0; cursor:pointer; }
+  select { width:100%; padding:8px; border-radius:8px; border:1px solid rgba(33,150,243,0.12); }
+  .result-box { margin-top:12px; padding:12px; background:#e8f4ff; border-left:4px solid var(--azul-clasico); border-radius:6px; display:none; }
+
+  footer{ text-align:center; padding:20px; color:#0b2a3a; opacity:0.95; font-size:14px; margin-top:18px; background:transparent; }
+
+  a { color:var(--azul-clasico); text-decoration:none }
+  a:hover{text-decoration:underline}
+
+  @media (max-width:900px){
+    .wrap{ flex-direction:column; }
+    aside{ order:-1; width:100% }
+    .img-grid{ grid-template-columns:1fr; }
+    nav{ top:88px; }
+  }
+
+  /* Animations */
+  @keyframes appearUp { from { opacity:0; transform: translateY(10px);} to { opacity:1; transform:translateY(0);} }
+</style>
+</head>
+
+<body>
+
+
+    <!-- Imagen fija en la esquina superior izquierda -->
+    <img src="img/archivotecno.png" alt="Archivotecno" class="esquina">
+
+    <!-- Aquí sigue todo tu código original -->
+<header>
+  <!-- logo: archivo subido por ti -->
+  <img src="/mnt/data/1000064814.jpg" alt="Logo Archivotecno (sin fondo)" />
+  <div>
+    <h1>Archivotecno</h1>
+    <div style="font-size:12px; opacity:0.95">Hábitos de estudio, prevención y recursos</div>
+  </div>
+</header>
+
+<nav>
+  <button class="nav-btn" onclick="scrollToSection('consecuencias')">Consecuencias</button>
+  <button class="nav-btn" onclick="scrollToSection('prevencion')">Prevención</button>
+  <button class="nav-btn" onclick="scrollToSection('objetivo')">Objetivo</button>
+  <button class="nav-btn" onclick="scrollToSection('publicos')">Públicos</button>
+  <button class="nav-btn" onclick="scrollToSection('consejos')">Consejos</button>
+  <button class="nav-btn" onclick="scrollToSection('impacto')">Impacto</button>
+  <button class="nav-btn" onclick="scrollToSection('recursos')">Recursos</button>
+  <button class="nav-btn" onclick="scrollToSection('guias')">Guías</button>
+  <button class="nav-btn" onclick="scrollToSection('actividades')">Actividades</button>
+  <button class="nav-btn" onclick="scrollToSection('familias')">Familias</button>
+  <button class="nav-btn" onclick="scrollToSection('foro')">Foro</button>
+  <button class="nav-btn" onclick="scrollToSection('fuentes')">Fuentes</button>
+  <button class="nav-btn" onclick="scrollToSection('test')">Test</button>
+</nav>
+
+<script>
+function scrollToSection(id) {
+    // Encuentra la sección por su id
+    const section = document.getElementById(id);
+    if (section) {
+        // Scroll suave hacia la sección
+        section.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        console.warn(`No se encontró la sección con id: ${id}`);
+    }
+}
+</script>
+
+
+<main class="wrap">
+  <article class="contenido">
+
+    <!-- 1 Consecuencias -->
+    <section id="consecuencias" class="card">
+      <h2>Consecuencias de la intoxicación tecnológica</h2>
+      <p>
+        La adicción a la tecnología tiene efectos negativos que afectan la vida personal, académica y emocional:
+      </p>
+      <ul>
+        <li>Deterioro de relaciones sociales por aislamiento y reemplazo del mundo real por el digital.</li>
+        <li>Abandono de responsabilidades y pérdida de la noción del tiempo.</li>
+        <li>Nomofobia (miedo a estar sin el celular), problemas de sueño y disminución de la concentración.</li>
+        <li>Aumento de ansiedad, irritabilidad, frustración y posible dependencia psicológica.</li>
+        <li>Impacto en el rendimiento académico y disminución del bienestar emocional.</li>
+      </ul>
+    </section>
+
+    <!-- 2 Cómo podemos evitarla / Prevención -->
+    <section id="prevencion" class="card">
+      <h2>Cómo podemos evitarla — Prevención</h2>
+      <p>Algunas estrategias prácticas para prevenir la tecnodependencia y promover hábitos digitales saludables:</p>
+      <ul>
+        <li>Establecer horarios y límites de uso de pantallas (bloques de tiempo para estudio y descanso).</li>
+        <li>Crear zonas libres de dispositivos (mesa de estudio, comedor, habitación para dormir).</li>
+        <li>Fomentar actividades alternativas: deporte, lectura, hobbies, interacción presencial con amigos y familia.</li>
+        <li>Enseñar técnicas de autorregulación y uso responsable de redes y videojuegos.</li>
+        <li>Promover rutinas de sueño saludables (apagar pantallas 1 hora antes de acostarse).</li>
+        <li>Usar herramientas de control de tiempo y configuraciones de "bienestar digital".</li>
+      </ul>
+      <!DOCTYPE html>
+<html>
+<head>
+  <title>Imagen de Tecnodependencia</title>
+</head>
+<body>
+  <img src="https://p19-flow-image-sign.ibyteimg.com/tos-mya-i-3rsxbfecgb/rc_gen_image/686ed1e61bbe4a198bb6db23124c4a18.png~tplv-0es2k971ck-image.png?rcl=20251123074932C535ADC9C6C8297EBBEB&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2080079380&x-signature=E%2FBuQwbM64u3Rif69%2BwuFJXET1A%3D" alt="Imagen de tecnodependencia" width="500">
+</body>
+</html>
+    </section>
+
+    <!-- 3 Objetivo de la página -->
+    <section id="objetivo" class="card">
+      <h2>Objetivo de la página</h2>
+      <p>
+        Esta página busca informar y ofrecer recursos prácticos para docentes, familias y jóvenes sobre:
+      </p>
+      <ul>
+        <li>Entender el impacto de los hábitos de estudio y el uso de la tecnología en adolescentes.</li>
+        <li>Proporcionar herramientas, guías y actividades para mejorar hábitos de estudio y prevenir la tecnodependencia.</li>
+        <li>Brindar un espacio interactivo para que estudiantes compartan experiencias y aprendan entre sí.</li>
+        <li>Ofrecer un test rápido para autoevaluar el riesgo de tecnodependencia y orientar acciones de mejora.</li>
+      </ul>
+    </section>
+
+    <!-- 4 A quién va dirigida -->
+    <section id="publicos" class="card">
+      <h2>Públicos a los que va dirigida la información</h2>
+      <ul>
+        <li><strong>Padres y madres de familia:</strong> Para comprender riesgos y establecer límites saludables.</li>
+        <li><strong>Adolescentes y jóvenes:</strong> Grupo más vulnerable por el uso intensivo de redes y videojuegos.</li>
+        <li><strong>Docentes y educadores:</strong> Para implementar prevención en el aula.</li>
+        <li><strong>Profesionales de salud mental:</strong> Referencia de fuentes y material para intervención.</li>
+        <li><strong>Instituciones y políticas públicas:</strong> Para diseñar programas preventivos.</li>
+      </ul>
+    </section>
+
+    <!-- 5 Consejos rápidos -->
+    <section id="consejos" class="card">
+      <h2>Consejos rápidos</h2>
+      <ul>
+        <li><strong>Planifica tu día con bloques:</strong> alterna estudio, descanso y tiempo sin pantallas.</li>
+        <li><strong>Usa la técnica Pomodoro:</strong> 25 min de trabajo / 5 min de descanso.</li>
+        <li><strong>Crea un espacio de estudio:</strong> ordenado, con luz adecuada y sin distracciones.</li>
+        <li><strong>Apaga notificaciones:</strong> o usa modos no molestar durante estudio.</li>
+        <li><strong>Prioriza sueño y alimentación:</strong> influyen en concentración y memoria.</li>
+      </ul>
+      <!DOCTYPE html>
+<html>
+<head>
+  <title>Imagen de Tecnodependencia con Doctores</title>
+</head>
+<body>
+  <img src="https://p19-flow-image-sign.ibyteimg.com/tos-mya-i-3rsxbfecgb/rc_gen_image/2b9ddbef514b4d19b73a45d38412a158.png~tplv-0es2k971ck-image.png?rcl=20251123075340505A44F2E798D231BFF6&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2080079627&x-signature=RHDyUeks2dC38c5k7%2Bo6hqqt%2BCk%3D" alt="Doctores explicando sobre tecnodependencia" width="500">
+</body>
+</html>
+    </section>
+
+    <!-- 6 Impacto en los hábitos de estudio -->
+    <section id="impacto" class="card">
+      <h2>Impacto de los hábitos de estudio en los adolescentes</h2>
+      <p>
+        Los hábitos de estudio son prácticas, rutinas y estrategias que los estudiantes usan para aprender,
+        organizar tiempo y prepararse. En adolescentes, impactan rendimiento, motivación y bienestar emocional.
+      </p>
+      <p>
+        Investigaciones (2023–2024) muestran que adolescentes con buenos hábitos —planificar tareas,
+        estudiar en un ambiente adecuado, repasar frecuentemente y tomar apuntes— obtienen mejores calificaciones
+        y menor estrés escolar. Un estudio reportó:
+      </p>
+      <ul>
+        <li>36% con calificaciones altas (9 y 10) después de intervención en hábitos</li>
+        <li>47% en nivel medio</li>
+        <li>17% por debajo del nivel esperado</li>
+      </ul>
+      <p>
+        Factores como sueño, alimentación y uso excesivo del celular afectan directamente la concentración
+        y retención de información.
+      </p>
+
+    </section>
+
+    <!-- 7 Recursos para docentes -->
+    <section id="recursos" class="card">
+      <h2>Recursos para docentes</h2>
+      <p>Los docentes pueden usar guías, secuencias didácticas y materiales interactivos para fortalecer hábitos.</p>
+      <ul>
+        <li>Guías pedagógicas y secuencias didácticas.</li>
+        <li>Fichas imprimibles, ejercicios de lectura y técnicas de estudio.</li>
+        <li>Plataformas con actividades interactivas y videos.</li>
+      </ul>
+      <div class="link-box">
+        <p><strong>Recurso recomendado:</strong></p>
+        <a href="https://materialeducativo.org/category/docentes/" target="_blank" rel="noopener">Material Educativo para Docentes</a>
+      </div>
+    </section>
+
+    <!-- 8 Guías didácticas -->
+    <section id="guias">
+  <h2>Guías Didácticas para Familias</h2>
+
+  <ul>
+    <li>
+      <a href="https://www.plenainclusion.org/sites/default/files/forma_autodet_familias.pdf" 
+         target="_blank" rel="noopener noreferrer">
+        Formación en Autodeterminación para Familias
+      </a>
+      <p>Guía con estrategias para promover autonomía y toma de decisiones en familia.</p>
+    </li>
+
+    <li>
+      <a href="https://ca-safe-supportive-schools.wested.org/wp-content/uploads/2024/02/Cal-Well_Family-Guide_SPANISH_final_Accessible.pdf"
+         target="_blank" rel="noopener noreferrer">
+        Guía Familiar para Apoyar la Salud Mental y el Bienestar
+      </a>
+      <p>Orientación para apoyar la salud emocional en niños y adolescentes.</p>
+    </li>
+  </ul>
+
+  <h2>Actividades Familiares</h2>
+
+  <ul>
+    <li>
+      <a href="https://www.papelregio.com/diversion-en-familia/actividades-en-familia/actividades-en-familia-para-realizar-en-casa/"
+         target="_blank" rel="noopener noreferrer">
+        Actividades para hacer en familia
+      </a>
+      <p>Juegos, manualidades y actividades recreativas que fortalecen la convivencia.</p>
+    </li>
+
+    <li>
+      <a href="https://relationshipsca.org/ser-mejor-padre-20-actividades-familiares/"
+         target="_blank" rel="noopener noreferrer">
+        Actividades para expresar emociones y fomentar la autoestima
+      </a>
+      <p>Ideas para mejorar la comunicación emocional dentro del hogar.</p>
+    </li>
+  </ul>
+</section>
+
+    <!-- 9 Actividades para aula y 10 Consejos para familias (fusionados) -->
+    <section id="actividades" class="card">
+      <h2>Actividades para el aula y familias</h2>
+
+      <h3>Para el aula</h3>
+      <ul>
+        <li>Dinámicas de atención plena de 5 minutos al inicio de clase.</li>
+        <li>Rincones de estudio colaborativos con roles (lector, moderador, síntesis).</li>
+        <li>Proyectos por parejas con entregables semanales para fomentar responsabilidad.</li>
+      </ul>
+
+      <h3>Para familias</h3>
+      <ul>
+        <li>Actividades en familia (juegos, manualidades, deporte) para fortalecer vínculos.</li>
+        <li>Rutinas de bienestar: hora de lectura antes de dormir, días sin pantalla.</li>
+        <li>Ejercicios para expresar emociones: diarios, rondas familiares, yoga o meditación.</li>
+      </ul>
+
+      <div class="link-box">
+        <p><strong>Enlaces útiles:</strong></p>
+        <a href="https://www.papelregio.com/diversion-en-familia/actividades-en-familia/actividades-en-familia-para-realizar-en-casa/" target="_blank" rel="noopener">Actividades para hacer en familia</a><br>
+        <a href="https://relationshipsca.org/ser-mejor-padre-20-actividades-familiares/" target="_blank" rel="noopener">Actividades para expresar emociones y fomentar la autoestima</a>
+      </div>
+    </section>
+|
+<main class="wrap">
+  <article class="contenido">
+
+    <!-- 1 Consecuencias -->
+    <section id="consecuencias" class="card">
+      <h2>Consecuencias de la intoxicación tecnológica</h2>
+      <p>
+        La adicción a la tecnología tiene efectos negativos que afectan la vida personal, académica y emocional:
+      </p>
+      <ul>
+        <li>Deterioro de relaciones sociales por aislamiento y reemplazo del mundo real por el digital.</li>
+        <li>Abandono de responsabilidades y pérdida de la noción del tiempo.</li>
+        <li>Nomofobia (miedo a estar sin el celular), problemas de sueño y disminución de la concentración.</li>
+        <li>Aumento de ansiedad, irritabilidad, frustración y posible dependencia psicológica.</li>
+        <li>Impacto en el rendimiento académico y disminución del bienestar emocional.</li>
+      </ul>
+      <!-- imagen ilustrativa -->
+      <img class="hero-image" src="/mnt/data/1000066201.jpg" alt="Adolescente concentrada en celular — ejemplo de tecnodependencia">
+    </section>
+
+    <!-- 2 Cómo podemos evitarla / Prevención -->
+    <section id="prevencion" class="card">
+      <h2>Cómo podemos evitarla — Prevención</h2>
+      <p>Algunas estrategias prácticas para prevenir la tecnodependencia y promover hábitos digitales saludables:</p>
+      <ul>
+        <li>Establecer horarios y límites de uso de pantallas (bloques de tiempo para estudio y descanso).</li>
+        <li>Crear zonas libres de dispositivos (mesa de estudio, comedor, habitación para dormir).</li>
+        <li>Fomentar actividades alternativas: deporte, lectura, hobbies, interacción presencial con amigos y familia.</li>
+        <li>Enseñar técnicas de autorregulación y uso responsable de redes y videojuegos.</li>
+        <li>Promover rutinas de sueño saludables (apagar pantallas 1 hora antes de acostarse).</li>
+        <li>Usar herramientas de control de tiempo y configuraciones de "bienestar digital".</li>
+      </ul>
+    </section>
+
+    <!-- 3 Objetivo de la página -->
+    <section id="objetivo" class="card">
+      <h2>Objetivo de la página</h2>
+      <p>
+        Esta página busca informar y ofrecer recursos prácticos para docentes, familias y jóvenes sobre:
+      </p>
+      <ul>
+        <li>Entender el impacto de los hábitos de estudio y el uso de la tecnología en adolescentes.</li>
+        <li>Proporcionar herramientas, guías y actividades para mejorar hábitos de estudio y prevenir la tecnodependencia.</li>
+        <li>Brindar un espacio interactivo para que estudiantes compartan experiencias y aprendan entre sí.</li>
+        <li>Ofrecer un test rápido para autoevaluar el riesgo de tecnodependencia y orientar acciones de mejora.</li>
+      </ul>
+    </section>
+
+    <!-- 4 A quién va dirigida -->
+    <section id="publicos" class="card">
+      <h2>Públicos a los que va dirigida la información</h2>
+      <ul>
+        <li><strong>Padres y madres de familia:</strong> Para comprender riesgos y establecer límites saludables.</li>
+        <li><strong>Adolescentes y jóvenes:</strong> Grupo más vulnerable por el uso intensivo de redes y videojuegos.</li>
+        <li><strong>Docentes y educadores:</strong> Para implementar prevención en el aula.</li>
+        <li><strong>Profesionales de salud mental:</strong> Referencia de fuentes y material para intervención.</li>
+        <li><strong>Instituciones y políticas públicas:</strong> Para diseñar programas preventivos.</li>
+      </ul>
+    </section>
+
+    <!-- 5 Consejos rápidos -->
+    <section id="consejos" class="card">
+      <h2>Consejos rápidos</h2>
+      <ul>
+        <li><strong>Planifica tu día con bloques:</strong> alterna estudio, descanso y tiempo sin pantallas.</li>
+        <li><strong>Usa la técnica Pomodoro:</strong> 25 min de trabajo / 5 min de descanso.</li>
+        <li><strong>Crea un espacio de estudio:</strong> ordenado, con luz adecuada y sin distracciones.</li>
+        <li><strong>Apaga notificaciones:</strong> o usa modos no molestar durante estudio.</li>
+        <li><strong>Prioriza sueño y alimentación:</strong> influyen en concentración y memoria.</li>
+      </ul>
+    </section>
+
+    <!-- 6 Impacto en los hábitos de estudio -->
+    <section id="impacto" class="card">
+      <h2>Impacto de los hábitos de estudio en los adolescentes</h2>
+      <p>
+        Los hábitos de estudio son prácticas, rutinas y estrategias que los estudiantes usan para aprender,
+        organizar tiempo y prepararse. En adolescentes, impactan rendimiento, motivación y bienestar emocional.
+      </p>
+      <p>
+        Investigaciones (2023–2024) muestran que adolescentes con buenos hábitos —planificar tareas,
+        estudiar en un ambiente adecuado, repasar frecuentemente y tomar apuntes— obtienen mejores calificaciones
+        y menor estrés escolar. Un estudio reportó:
+      </p>
+      <ul>
+        <li>36% con calificaciones altas (9 y 10) después de intervención en hábitos</li>
+        <li>47% en nivel medio</li>
+        <li>17% por debajo del nivel esperado</li>
+      </ul>
+      <p>
+        Factores como sueño, alimentación y uso excesivo del celular afectan directamente la concentración
+        y retención de información.
+      </p>
+
+    </section>
+
+    <!-- 7 Recursos para docentes -->
+    <section id="recursos" class="card">
+      <h2>Recursos para docentes</h2>
+      <p>Los docentes pueden usar guías, secuencias didácticas y materiales interactivos para fortalecer hábitos.</p>
+      <ul>
+        <li>Guías pedagógicas y secuencias didácticas.</li>
+        <li>Fichas imprimibles, ejercicios de lectura y técnicas de estudio.</li>
+        <li>Plataformas con actividades interactivas y videos.</li>
+      </ul>
+      <div class="link-box">
+        <p><strong>Recurso recomendado:</strong></p>
+        <a href="https://materialeducativo.org/category/docentes/" target="_blank" rel="noopener">Material Educativo para Docentes</a>
+      </div>
+    </section>
+
+    <!-- 8 Guías didácticas -->
+    <section id="guias">
+  <h2>Guías Didácticas para Familias</h2>
+
+  <ul>
+    <li>
+      <a href="https://www.plenainclusion.org/sites/default/files/forma_autodet_familias.pdf" 
+         target="_blank" rel="noopener noreferrer">
+        Formación en Autodeterminación para Familias
+      </a>
+      <p>Guía con estrategias para promover autonomía y toma de decisiones en familia.</p>
+    </li>
+
+    <li>
+      <a href="https://ca-safe-supportive-schools.wested.org/wp-content/uploads/2024/02/Cal-Well_Family-Guide_SPANISH_final_Accessible.pdf"
+         target="_blank" rel="noopener noreferrer">
+        Guía Familiar para Apoyar la Salud Mental y el Bienestar
+      </a>
+      <p>Orientación para apoyar la salud emocional en niños y adolescentes.</p>
+    </li>
+  </ul>
+
+  <h2>Actividades Familiares</h2>
+
+  <ul>
+    <li>
+      <a href="https://www.papelregio.com/diversion-en-familia/actividades-en-familia/actividades-en-familia-para-realizar-en-casa/"
+         target="_blank" rel="noopener noreferrer">
+        Actividades para hacer en familia
+      </a>
+      <p>Juegos, manualidades y actividades recreativas que fortalecen la convivencia.</p>
+    </li>
+
+    <li>
+      <a href="https://relationshipsca.org/ser-mejor-padre-20-actividades-familiares/"
+         target="_blank" rel="noopener noreferrer">
+        Actividades para expresar emociones y fomentar la autoestima
+      </a>
+      <p>Ideas para mejorar la comunicación emocional dentro del hogar.</p>
+    </li>
+  </ul>
+</section>
+
+    <!-- 9 Actividades para aula y 10 Consejos para familias (fusionados) -->
+    <section id="actividades" class="card">
+      <h2>Actividades para el aula y familias</h2>
+
+      <h3>Para el aula</h3>
+      <ul>
+        <li>Dinámicas de atención plena de 5 minutos al inicio de clase.</li>
+        <li>Rincones de estudio colaborativos con roles (lector, moderador, síntesis).</li>
+        <li>Proyectos por parejas con entregables semanales para fomentar responsabilidad.</li>
+      </ul>
+
+      <h3>Para familias</h3>
+      <ul>
+        <li>Actividades en familia (juegos, manualidades, deporte) para fortalecer vínculos.</li>
+        <li>Rutinas de bienestar: hora de lectura antes de dormir, días sin pantalla.</li>
+        <li>Ejercicios para expresar emociones: diarios, rondas familiares, yoga o meditación.</li>
+      </ul>
+
+      <div class="link-box">
+        <p><strong>Enlaces útiles:</strong></p>
+        <a href="https://www.papelregio.com/diversion-en-familia/actividades-en-familia/actividades-en-familia-para-realizar-en-casa/" target="_blank" rel="noopener">Actividades para hacer en familia</a><br>
+        <a href="https://relationshipsca.org/ser-mejor-padre-20-actividades-familiares/" target="_blank" rel="noopener">Actividades para expresar emociones y fomentar la autoestima</a>
+      </div>
+    </section>
+
+    <!-- 11 Foro estudiantil -->
+    <section id="foro" class="card" aria-live="polite">
+      <h2>Foro estudiantil</h2>
+      <p>Responde preguntas y lee las respuestas de otros estudiantes. (Respuestas locales en esta página — no se guardan en servidor)</p>
+
+      <div id="foroPreguntas" aria-label="Preguntas del foro"></div>
+
+      <div class="foro-fuentes card" style="background:#fafcff;">
+        <h3>Fuentes confiables sobre tecnodependencia</h3>
+        <ul>
+          <li><a href="https://www.who.int/news-room/fact-sheets/detail/addictive-behaviours-and-internet-gaming-disorder" target="_blank" rel="noopener">Organización Mundial de la Salud (OMS)</a></li>
+          <li><a href="https://www.apa.org/news/press/releases/stress/2019/digital-age" target="_blank" rel="noopener">American Psychological Association</a></li>
+          <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5830054/" target="_blank" rel="noopener">National Library of Medicine</a></li>
+          <li><a href="https://www.sciencedirect.com/science/article/pii/S0747563217301564" target="_blank" rel="noopener">ScienceDirect</a></li>
+          <li><a href="https://www.frontiersin.org/articles/10.3389/fpsyg.2018.02041/full" target="_blank" rel="noopener">Frontiers in Psychology</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 12 Fuentes (recap) -->
+    <section id="fuentes" class="card">
+      <h2>Fuentes y bibliografía</h2>
+      <p>Algunas fuentes consultadas y recomendadas para ampliar información:</p>
+      <ul>
+        <li>Echeburúa & De Corral (2010). Adicción a las nuevas tecnologías.</li>
+        <li>Kuss & Griffiths (2017). Social Networking Sites and Addiction.</li>
+        <li>Young, K. (1998). Internet addiction.</li>
+        <li>OMS (varios informes sobre uso problemático de tecnologías).</li>
+        <li>Artículos y material educativo enlazado en cada sección.</li>
+      </ul>
+    </section>
+
+    <!-- 13 Test interactivo -->
+    <section id="test" class="card" aria-label="Test de tecnodependencia">
+      <h2>Test Breve de Tecnodependencia</h2>
+      <div class="test-container">
+        <p><strong>Instrucciones:</strong> Selecciona la opción que mejor describa tu situación para cada ítem.</p>
+        <form id="techTest" onsubmit="return false;">
+          <div id="questions"></div>
+          <button type="button" id="calcButton" class="submit-btn">Calcular resultado</button>
+        </form>
+
+        <div id="result" class="result-box" role="status" aria-live="polite"></div>
+
+        <h3>Bibliografía</h3>
+        <ul>
+          <li>Echeburúa & De Corral (2010). Adicción a las nuevas tecnologías.</li>
+          <li>Kuss & Griffiths (2017). Social Networking Sites and Addiction.</li>
+          <li>Young, K. (1998). Internet addiction.</li>
+          <li>OMS (2021). Uso problemático de tecnologías digitales.</li>
+        </ul>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- Sidebar -->
+  <aside>
+    <div class="card">
+      <h3>Resumen rápido</h3>
+      <p>Esta página reúne información, guías, actividades, un foro estudiantil y un test para evaluar riesgo de tecnodependencia.</p>
+    </div>
+
+    <div class="card">
+      <h3>Contacto / Uso</h3>
+      <p>Usa el foro para interactuar, comparte los recursos con familias y docentes, y pásales el test a estudiantes o padres.</p>
+    </div>
+
+    <div class="card">
+      <h3>Accesos rápidos</h3>
+      <ul>
+        <li><a href="#consecuencias">Consecuencias</a></li>
+        <li><a href="#prevencion">Prevención</a></li>
+        <li><a href="#foro">Foro</a></li>
+        <li><a href="#test">Test</a></li>
+      </ul>
+    </div>
+  </aside>
+</main>
+
+<footer>
+  © Archivotecno — Recursos educativos sobre hábitos y tecnología.
+</footer>
+
+<!-- SCRIPTS: Foro + Test + Navegación -->
+<script>
+/* Smooth scroll helper */
+function scrollToSection(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const top = el.getBoundingClientRect().top + window.scrollY - 80;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
+/* ---------------------------
+   FORO: preguntas y lógica
+   --------------------------- */
+const preguntasForo = [
+  {
+    categoria: "Conceptos básicos",
+    preguntas: [
+      "¿Qué entendemos por tecnodependencia?",
+      "¿Crees que todos somos dependientes de la tecnología?",
+      "¿Qué comportamientos indican una relación poco saludable con la tecnología?",
+      "¿Qué factores influyen más en la tecnodependencia juvenil?",
+      "¿Puede existir una relación equilibrada con la tecnología?"
+    ]
+  },
+  {
+    categoria: "Uso del celular y redes",
+    preguntas: [
+      "¿Cuántas horas al día usas tu celular?",
+      "¿Has sentido ansiedad cuando no tienes tu teléfono?",
+      "¿Qué redes sociales consideras más adictivas?",
+      "¿Te cuesta concentrarte en clase por estar pendiente del celular?",
+      "¿Cómo afecta el uso excesivo de pantallas tu sueño?"
+    ]
+  },
+  {
+    categoria: "Videojuegos",
+    preguntas: [
+      "¿Cuántas horas dedicas a videojuegos a la semana?",
+      "¿Has perdido la noción del tiempo mientras juegas?",
+      "¿Pueden los videojuegos generar adicción?",
+      "¿Afectan los videojuegos tu vida académica?",
+      "¿Cómo debería regularse el tiempo de juego?"
+    ]
+  },
+  {
+    categoria: "Efectos psicológicos",
+    preguntas: [
+      "¿Has sentido estrés al estar desconectado?",
+      "¿Aumenta la comparación social con la tecnología?",
+      "¿Cómo afecta la tecnodependencia tu autoestima?",
+      "¿Crees que existe relación con depresión o soledad?",
+      "¿La tecnología te acerca o aleja de los demás?"
+    ]
+  }
+];
+
+function cargarForo(){
+  const contenedor = document.getElementById("foroPreguntas");
+  contenedor.innerHTML = ""; // limpiar
+
+  preguntasForo.forEach((cat, i) => {
+    const divCat = document.createElement("div");
+    divCat.className = "foro-category";
+    divCat.innerHTML = `<h3>${i+1}. ${cat.categoria}</h3>`;
+
+    cat.preguntas.forEach((p, j) => {
+      const qID = `q_${i}_${j}`;
+
+      const bloque = document.createElement("div");
+      bloque.className = "foro-question";
+      bloque.innerHTML = `
+        <strong>${p}</strong>
+        <div class="foro-actions">
+          <button class="submit-btn" type="button" onclick="mostrarResponder('${qID}')">Responder</button>
+          <button class="submit-btn" type="button" onclick="toggleRespuestas('${qID}')">
+            Ver respuestas (<span id="${qID}_count">0</span>) ▼
+          </button>
+        </div>
+
+        <div id="${qID}_responder" class="responder-box" aria-hidden="true">
+          <textarea id="${qID}_text" rows="3" placeholder="Escribe tu respuesta..."></textarea>
+          <div style="margin-top:8px;">
+            <button class="submit-btn" type="button" onclick="enviarRespuesta('${qID}')">Enviar</button>
+          </div>
+        </div>
+
+        <div id="${qID}_respuestas" class="foro-respuestas" aria-live="polite"></div>
+      `;
+
+      divCat.appendChild(bloque);
+    });
+
+    contenedor.appendChild(divCat);
+  });
+}
+
+function mostrarResponder(id){
+  const box = document.getElementById(id + "_responder");
+  if(!box) return;
+  const shown = box.style.display === "block";
+  box.style.display = shown ? "none" : "block";
+  box.setAttribute('aria-hidden', shown ? 'true' : 'false');
+  if(!shown){
+    const ta = box.querySelector('textarea');
+    if(ta) ta.focus();
+  }
+}
+
+function toggleRespuestas(id){
+  const box = document.getElementById(id + "_respuestas");
+  if(!box) return;
+  box.style.display = (box.style.display === "block") ? "none" : "block";
+}
+
+function enviarRespuesta(id){
+  const textArea = document.getElementById(id + "_text");
+  if(!textArea) return;
+  const texto = textArea.value.trim();
+  if(!texto){
+    alert("Escribe una respuesta.");
+    textArea.focus();
+    return;
+  }
+
+  const contenedor = document.getElementById(id + "_respuestas");
+  const p = document.createElement("p");
+  p.textContent = texto;
+  p.style.animation = 'appearUp .35s ease both';
+  contenedor.appendChild(p);
+
+  textArea.value = "";
+
+  const count = document.getElementById(id + "_count");
+  if(count) count.textContent = parseInt(count.textContent) + 1;
+
+  contenedor.style.display = "block";
+}
+
+/* ---------------------------
+   TEST: generar preguntas y calcular resultado
+   --------------------------- */
+const preguntasTest = [
+  "¿Sientes ansiedad sin internet?",
+  "¿Usas el teléfono durante las clases cuando el profesor explica?",
+  "¿Te cuesta pasar más de una hora sin mirar tu celular?",
+  "¿Te cuesta hacer la tarea sin revisar el celular varias veces?",
+  "¿Has sentido enojo o tristeza cuando te quitan el celular?",
+  "¿Miras el celular hasta tarde y después te cuesta levantarte para la escuela?",
+  "¿Te comparas con lo que ves en redes y eso afecta cómo te sientes contigo mismo?",
+  "¿Sientes que tus calificaciones han bajado por estar tanto tiempo en línea?",
+  "¿Llevas tu celular incluso al baño o cuando comes?",
+  "¿Tu humor cambia cuando te quedas sin batería o cargador?"
+];
+
+function generarTest(){
+  const container = document.getElementById('questions');
+  container.innerHTML = '';
+  preguntasTest.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'question';
+    div.innerHTML = `
+      <label for="q_${i}"><strong>${i+1}. ${q}</strong></label>
+      <select id="q_${i}" data-q>
+        <option value="">Selecciona</option>
+        <option value="1">Sí</option>
+        <option value="0.5">Tal vez</option>
+        <option value="0">No</option>
+      </select>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function calcularTest(){
+  const selects = Array.from(document.querySelectorAll('#techTest select[data-q]'));
+  // Verificar todos respondidos
+  for(const s of selects){
+    if(!s.value){ alert('Por favor responde todas las preguntas.'); s.focus(); return; }
+  }
+  let total = 0;
+  selects.forEach(s => total += parseFloat(s.value));
+  // Normalize to scale 0-10 (since 10 questions max 1 each)
+  total = Math.round(total * 2) / 2; // round to nearest .5
+
+  const resBox = document.getElementById('result');
+  resBox.style.display = 'block';
+  resBox.innerHTML = '';
+
+  if(total <= 3){
+    resBox.style.background = 'linear-gradient(90deg, rgba(220,252,231,0.9), rgba(237,249,236,0.9))';
+    resBox.style.color = '#0f5132';
+    resBox.innerHTML = `<strong>✅ Baja dependencia</strong> — Puntuación: ${total} / 10
+      <div style="margin-top:8px;">
+        <ul>
+          <li>Mantén tus hábitos actuales: sigue estableciendo límites y descansos.</li>
+          <li>Practica técnicas de estudio con Pomodoro y alterna digital/analógico.</li>
+        </ul>
+      </div>`;
+  } else if(total <= 6){
+    resBox.style.background = 'linear-gradient(90deg, rgba(255,249,196,0.95), rgba(255,250,205,0.95))';
+    resBox.style.color = '#7a4f00';
+    resBox.innerHTML = `<strong>⚠️ Dependencia media</strong> — Puntuación: ${total} / 10
+      <div style="margin-top:8px;">
+        <ul>
+          <li>Establece reglas claras y usa apps de gestión de tiempo.</li>
+          <li>Combina estudio digital con actividades analógicas (resúmenes a mano).</li>
+        </ul>
+      </div>`;
+  } else {
+    resBox.style.background = 'linear-gradient(90deg, rgba(254,226,226,0.95), rgba(255,240,240,0.95))';
+    resBox.style.color = '#7a1212';
+    resBox.innerHTML = `<strong>❌ Alta dependencia</strong> — Puntuación: ${total} / 10
+      <div style="margin-top:8px;">
+        <ul>
+          <li>Inicia una "desintoxicación digital" gradual y pide apoyo familiar.</li>
+          <li>Considera apoyo psicológico o consejería escolar si hay mucha ansiedad.</li>
+        </ul>
+      </div>`;
+  }
+
+  // scroll to result smoothly
+  resBox.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+/* Init */
+window.addEventListener('DOMContentLoaded', () => {
+  cargarForo();
+  generarTest();
+
+  document.getElementById('calcButton').addEventListener('click', calcularTest);
+});
+</script>
+</body>
+</html>
